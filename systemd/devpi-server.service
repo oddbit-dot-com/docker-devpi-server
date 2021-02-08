@@ -1,0 +1,17 @@
+[Unit]
+Wants=network.target
+After=network-online.target
+
+[Service]
+Restart=on-failure
+ExecStartPre=/usr/bin/rm -f %t/%n-pid
+ExecStart=/usr/bin/podman run --replace \
+	--conmon-pidfile %t/%n-pid --cgroups=no-conmon \
+	--name %n -d -p 127.0.0.1:3141:3141 \
+	-v devpi:/root/.devpi oddbit/devpi-server
+ExecStopPost=/usr/bin/rm -f %t/%n-pid
+PIDFile=%t/%n-pid
+Type=forking
+
+[Install]
+WantedBy=multi-user.target default.target
