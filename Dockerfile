@@ -1,8 +1,15 @@
 FROM python:3.9
 
 RUN pip install devpi-server devpi-web
-WORKDIR /root
-VOLUME /root/.devpi
+
+ENV DEVPI_CONFIG=/etc/devpi-config.yml
+
 COPY docker-entrypoint.sh /docker-entrypoint.sh
+COPY start-devpi-server.sh /start-devpi-server.sh
+COPY devpi-server.yml $DEVPI_CONFIG
+
+VOLUME /devpi
+WORKDIR /devpi
+
 ENTRYPOINT ["sh", "/docker-entrypoint.sh"]
-CMD ["devpi-server", "--host", "0.0.0.0"]
+CMD ["sh", "/start-devpi-server.sh"]

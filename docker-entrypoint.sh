@@ -1,7 +1,7 @@
 #!/bin/sh
 
-if ! [ -f /root/.devpi/server ]; then
-	devpi-init
+if ! [ -f /devpi/.nodeinfo ]; then
+	devpi-init -c "$DEVPI_CONFIG"
 fi
 
 exec "$@"
